@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         android:text="Enviar"
         android:layout_toRightOf="@+id/message"
-        android:layout_below="@+id/messages"/>
+        android:layout_below="@+id/messages"
+        android:onClick="sendMessage"/>
 
 </RelativeLayout>
 
