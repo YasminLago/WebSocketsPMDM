@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
     private void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://192.168.1.150:81");
+            uri = new URI("ws://proyecto-pmdm-ylagorebollar.c9users.io:8081");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
@@ -161,9 +163,9 @@ public class MainActivity extends AppCompatActivity
         };
 
         mWebSocketClient.connect();
-
     }
-    public void sendMessage() {
+
+    public void sendMessage(View btn) {
         EditText editText = (EditText)findViewById(R.id.message);
         mWebSocketClient.send(editText.getText().toString());
         editText.setText("");
