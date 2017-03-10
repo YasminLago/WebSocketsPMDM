@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity
 
     private static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
 
+    //String nombre,msg,privado(1/0),nick_dst;
+    String nombre, mensaje,nickDest;
+    int [] privado = {1,0};
+
 
 
     @Override
