@@ -37,6 +37,13 @@
         android:layout_toRightOf="@+id/message"
         android:layout_below="@+id/messages"
         android:onClick="sendMessage"/>
+    <CheckBox
+        android:id="@+id/smsPrivado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/enviar"
+        android:layout_toRightOf="@+id/userDest"
+        android:layout_toEndOf="@+id/userDest" />
 
 </RelativeLayout>
 

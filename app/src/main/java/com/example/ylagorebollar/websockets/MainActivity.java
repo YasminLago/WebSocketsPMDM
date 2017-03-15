@@ -1,5 +1,6 @@
 package com.example.ylagorebollar.websockets;
 
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,12 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,13 +35,15 @@ public class MainActivity extends AppCompatActivity
 
     private WebSocketClient mWebSocketClient;
 
-    private static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
-
     //String nombre,msg,privado(1/0),nick_dst;
-    String nombre, mensaje,nickDest;
+    String id = "";
+    String getMensaje = "";
+    String destinatario = "";
     int [] privado = {1,0};
+    String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\""+"privado:\""+"\""+"destinatario:"+"}";
 
 
+    CheckBox check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        check = (CheckBox)findViewById(R.id.smsPrivado);
     }
 
     @Override
@@ -106,8 +114,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_user) {
+
+
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -124,6 +134,17 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+   /* public Dialog crearDialogo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Hello User");
+        builder.setMessage("What is your name:");
+
+        final EditText input = new EditText(this);
+        input.setId(id);
+
+        return builder.create();
+    }*/
 
     private void connectWebSocket() {
         URI uri;
@@ -168,6 +189,18 @@ public class MainActivity extends AppCompatActivity
 
         mWebSocketClient.connect();
     }
+
+    /*public String jSon(){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("Id: ",id);
+            jsonObject.put("Mensaje: ",getMensaje);
+            jsonObject.put("Id: ",id);
+            jsonObject.put("Id: ",id);
+        }catch (JSONException e){
+
+        }
+    }*/
 
     public void sendMessage(View btn) {
         EditText editText = (EditText)findViewById(R.id.message);
