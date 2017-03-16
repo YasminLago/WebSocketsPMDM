@@ -1,7 +1,7 @@
 package com.example.ylagorebollar.websockets;
 
-import android.app.Dialog;
-import android.os.Build;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,18 +40,16 @@ public class MainActivity extends AppCompatActivity
     String id = "";
     String getMensaje = "";
     String destinatario = "";
-    int [] privado = {1,0};
-    String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\""+"privado:\""+"\""+"destinatario:"+"}";
-
-
     CheckBox check;
+    String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\"" + "privado:\"" + check + "\"" + "destinatario:" + destinatario + "}";
+
+    EditText mensaje;
+    EditText dest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        connectWebSocket();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,11 +112,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_user) {
-
-
-
+            crearDialogo();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -135,16 +131,34 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-   /* public Dialog crearDialogo(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Hello User");
-        builder.setMessage("What is your name:");
+    /**
+     * Crea un AlertDialog para introducir el nombre de usuario
+     */
+    public void crearDialogo(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Hola usuario");
+        alert.setMessage("Escribe tu nombre de usuario:");
 
         final EditText input = new EditText(this);
-        input.setId(id);
+        alert.setView(input);
 
-        return builder.create();
-    }*/
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                id = input.getEditableText().toString();
+                connectWebSocket();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        alert.create();
+        alert.show();
+    }
 
     private void connectWebSocket() {
         URI uri;
@@ -161,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.i("Websocket", "Opened");
-                mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
+                mWebSocketClient.send("Hello from " + id );
             }
 
             @Override
@@ -190,21 +204,26 @@ public class MainActivity extends AppCompatActivity
         mWebSocketClient.connect();
     }
 
-    /*public String jSon(){
+    public void mensajeJSon(){
         JSONObject jsonObject = new JSONObject();
         try{
-            jsonObject.put("Id: ",id);
-            jsonObject.put("Mensaje: ",getMensaje);
-            jsonObject.put("Id: ",id);
-            jsonObject.put("Id: ",id);
+
+
+            jsonObject.put("Id: ", id);
+            jsonObject.put("Mensaje: ", getMensaje);
+            jsonObject.put("Destinatario: ", destinatario);
+
         }catch (JSONException e){
 
         }
-    }*/
+    }
 
     public void sendMessage(View btn) {
-        EditText editText = (EditText)findViewById(R.id.message);
-        mWebSocketClient.send(editText.getText().toString());
-        editText.setText("");
+        dest = (EditText)findViewById(R.id.userDest);
+        getMensaje = mensaje.getText().toString();
+        destinatario = dest.getText().toString();
+        mensaje = (EditText)findViewById(R.id.message);
+        mWebSocketClient.send(msn);
+        mensaje.setText("");
     }
 }
