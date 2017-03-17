@@ -22,7 +22,6 @@ import android.widget.TextView;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,12 +38,15 @@ public class MainActivity extends AppCompatActivity
     //String nombre,msg,privado(1/0),nick_dst;
     String id = "";
     String getMensaje = "";
-    String destinatario = "";
+    String dest = "";
     CheckBox check;
-    String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\"" + "privado:\"" + check + "\"" + "destinatario:" + destinatario + "}";
+    //String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\"" + "privado:\"" + check + "\"" + "destinatario:" + destinatario + "}";
 
     EditText mensaje;
-    EditText dest;
+    EditText destinatario;
+
+    JSONObject clienteRecibe;
+    JSONObject clienteEnvia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,26 +206,39 @@ public class MainActivity extends AppCompatActivity
         mWebSocketClient.connect();
     }
 
-    public void mensajeJSon(){
-        JSONObject jsonObject = new JSONObject();
+    public String recibeJson() throws JSONException {
+        clienteEnvia = new JSONObject();
+        id = clienteRecibe.getString("id");
+        getMensaje = clienteRecibe.getString("mensaje");
+        dest = clienteRecibe.getString("destinatario");
+
+        String mensaje = id + ", " + getMensaje + ", " + 0 + ", " + dest;
+        return mensaje;
+    }
+
+    /**
+     * Crea un objeto json para el envío del mensaje
+     * @return Retorna una String que será enviada a través del método sendMessage()
+     */
+    public String enviaJson(){
+        clienteRecibe = new JSONObject();
+        mensaje = (EditText)findViewById(R.id.message);
+        destinatario = (EditText)findViewById(R.id.userDest);
+        getMensaje = mensaje.getText().toString();
+        dest = destinatario.getText().toString();
         try{
+            clienteRecibe.put("id", id);
+            clienteRecibe.put("mensaje", getMensaje);
+            clienteRecibe.put("privado", 0);
+            clienteRecibe.put("destinatario", dest);
+        }catch (JSONException e){}
 
-
-            jsonObject.put("Id: ", id);
-            jsonObject.put("Mensaje: ", getMensaje);
-            jsonObject.put("Destinatario: ", destinatario);
-
-        }catch (JSONException e){
-
-        }
+        String sms = clienteRecibe.toString();
+        return sms;
     }
 
     public void sendMessage(View btn) {
-        dest = (EditText)findViewById(R.id.userDest);
-        getMensaje = mensaje.getText().toString();
-        destinatario = dest.getText().toString();
-        mensaje = (EditText)findViewById(R.id.message);
-        mWebSocketClient.send(msn);
+        mWebSocketClient.send(enviaJson());
         mensaje.setText("");
     }
 }
