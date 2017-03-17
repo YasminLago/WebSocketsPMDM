@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.i("Websocket", "Opened");
-                mWebSocketClient.send("Hello from " + id );
+               // mWebSocketClient.send("Hello from " + id );
             }
 
             @Override
@@ -187,7 +187,11 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         TextView textView = (TextView)findViewById(R.id.messages);
-                        textView.setText(textView.getText() + "\n" + message);
+                        try {
+                            textView.setText(recibeJson() + "\n" + message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity
         getMensaje = clienteRecibe.getString("mensaje");
         dest = clienteRecibe.getString("destinatario");
 
-        String mensaje = id + ", " + getMensaje + ", " + 0 + ", " + dest;
+        String mensaje = id + ", " + getMensaje + ", Privado " + 0 + ", " + dest;
         return mensaje;
     }
 
