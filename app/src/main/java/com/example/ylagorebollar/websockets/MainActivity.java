@@ -35,12 +35,10 @@ public class MainActivity extends AppCompatActivity
 
     private WebSocketClient mWebSocketClient;
 
-    //String nombre,msg,privado(1/0),nick_dst;
     String id = "";
     String getMensaje = "";
     String dest = "";
     String checkBox = "";
-    //String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\"" + "privado:\"" + check + "\"" + "destinatario:" + destinatario + "}";
 
     EditText mensaje;
     EditText destinatario;
@@ -75,8 +73,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     @Override
@@ -136,7 +132,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Crea un AlertDialog para introducir el nombre de usuario
+     * Crea un AlertDialog para introducir el nombre de usuario en el menú lateral
      */
     public void crearDialogo(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -182,6 +178,10 @@ public class MainActivity extends AppCompatActivity
                // mWebSocketClient.send("Hello from " + id );
             }
 
+            /**
+             * Muestra todos los mensajes en el TextView
+             * @param s
+             */
             @Override
             public void onMessage(String s) {
                 final String message = s;
@@ -212,6 +212,11 @@ public class MainActivity extends AppCompatActivity
         mWebSocketClient.connect();
     }
 
+    /**
+     * Recibe los mensajes del servidor en formato json
+     * @return retorna el mensaje recibido que será mostrado en el onMessage() del connectWebSocket()
+     * @throws JSONException
+     */
     public String recibeJson() throws JSONException {
         clienteEnvia = new JSONObject();
         id = clienteRecibe.getString("id");
@@ -246,8 +251,13 @@ public class MainActivity extends AppCompatActivity
         return sms;
     }
 
+    /**
+     * Envia el mensaje y pone en blanco los campos de texto
+     * @param btn
+     */
     public void sendMessage(View btn) {
         mWebSocketClient.send(enviaJson());
         mensaje.setText("");
+        destinatario.setText("");
     }
 }
