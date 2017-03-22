@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     String id = "";
     String getMensaje = "";
     String dest = "";
-    CheckBox check;
+    String checkBox = "";
     //String msn = "{id: \"" + id + "mensaje:\"" + getMensaje + "\"" + "privado:\"" + check + "\"" + "destinatario:" + destinatario + "}";
 
     EditText mensaje;
@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
 
     JSONObject clienteRecibe;
     JSONObject clienteEnvia;
+
+    CheckBox check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        check = (CheckBox)findViewById(R.id.smsPrivado);
+
     }
 
     @Override
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
                         TextView textView = (TextView)findViewById(R.id.messages);
                         try {
-                            textView.setText(recibeJson() + "\n" + message);
+                            textView.append(recibeJson() + "\n" + message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -214,9 +216,10 @@ public class MainActivity extends AppCompatActivity
         clienteEnvia = new JSONObject();
         id = clienteRecibe.getString("id");
         getMensaje = clienteRecibe.getString("mensaje");
+        checkBox = clienteRecibe.getString("privado");
         dest = clienteRecibe.getString("destinatario");
 
-        String mensaje = id + ", " + getMensaje + ", Privado " + 0 + ", " + dest;
+        String mensaje = id + getMensaje + checkBox + dest;
         return mensaje;
     }
 
@@ -228,12 +231,14 @@ public class MainActivity extends AppCompatActivity
         clienteRecibe = new JSONObject();
         mensaje = (EditText)findViewById(R.id.message);
         destinatario = (EditText)findViewById(R.id.userDest);
+        check = (CheckBox)findViewById(R.id.smsPrivado);
+        checkBox = check.isChecked() ? "true" : "false";
         getMensaje = mensaje.getText().toString();
         dest = destinatario.getText().toString();
         try{
             clienteRecibe.put("id", id);
             clienteRecibe.put("mensaje", getMensaje);
-            clienteRecibe.put("privado", 0);
+            clienteRecibe.put("privado", check);
             clienteRecibe.put("destinatario", dest);
         }catch (JSONException e){}
 
