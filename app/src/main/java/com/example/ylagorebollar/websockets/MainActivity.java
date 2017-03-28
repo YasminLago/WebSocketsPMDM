@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     JSONObject clienteEnvia;
 
     CheckBox check;
+    Boolean privado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,8 +225,21 @@ public class MainActivity extends AppCompatActivity
         checkBox = clienteRecibe.getString("privado");
         dest = clienteRecibe.getString("destinatario");
 
-        String mensaje = id + getMensaje + checkBox + dest;
+        String mensaje = id + " " + getMensaje + " " + checkBox + " " + dest;
         return mensaje;
+    }
+
+    /**
+     * Comprueba si el CheckBox ha sido pulsado
+     * @return Retorna un booleano
+     */
+    public boolean smsPrivado(){
+        if(check.isChecked()){
+            privado = true;
+        }else{
+            privado = false;
+        }
+        return privado;
     }
 
     /**
@@ -237,13 +251,12 @@ public class MainActivity extends AppCompatActivity
         mensaje = (EditText)findViewById(R.id.message);
         destinatario = (EditText)findViewById(R.id.userDest);
         check = (CheckBox)findViewById(R.id.smsPrivado);
-        checkBox = check.isChecked() ? "true" : "false";
         getMensaje = mensaje.getText().toString();
         dest = destinatario.getText().toString();
         try{
             clienteRecibe.put("id", id);
             clienteRecibe.put("mensaje", getMensaje);
-            clienteRecibe.put("privado", check);
+            clienteRecibe.put("privado", smsPrivado());
             clienteRecibe.put("destinatario", dest);
         }catch (JSONException e){}
 
